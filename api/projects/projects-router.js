@@ -22,7 +22,7 @@ router.get('/:id', checkProjectId, (req, res) => {
 })
 
 router.post('/', validateProject, (req, res, next) => {
-    Projects.insert({ name: req.name, description: req.description })
+    Projects.insert({ name: req.name, description: req.description, completed: req.body.completed })
         .then(newProject => {
         res.status(201).json(newProject)
         })
@@ -30,7 +30,7 @@ router.post('/', validateProject, (req, res, next) => {
 })
 
 router.put('/:id', checkProjectId, validateProject, (req, res, next) => {
-    Projects.update(req.params.id, { name: req.name, description: req.description })
+    Projects.update(req.params.id, { name: req.name, description: req.description, completed: req.body.completed })
         .then(updatedProject => {
             res.status(200).json(updatedProject)
         })
@@ -56,7 +56,7 @@ router.get('/:id/actions',checkProjectId, async (req, res, next) => {
 })
 
 router.use((err, req, res, next) => { //eslint-disable-line
-    res.status(err.status || 500).json({
+    res.status(err.status || 400).json({
       customMessage: 'something bad happened in router',
       message: err.message,
       stack: err.stack,

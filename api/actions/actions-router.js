@@ -31,7 +31,7 @@ router.post('/', validateAction, checkActionProjectId, (req, res, next) => {
 })
 
 router.put('/:id', checkActionId, validateAction, (req, res, next) => {
-    Actions.update(req.params.id, { description: req.description, notes: req.notes })
+    Actions.update(req.params.id, { completed: req.body.completed, description: req.description, notes: req.notes, project_id: req.project_id })
         .then(updatedAction => {
             res.status(200).json(updatedAction)
         })
@@ -48,7 +48,7 @@ router.delete('/:id', checkActionId, async (req, res, next) => {
 })
 
 router.use((err, req, res, next) => { //eslint-disable-line
-    res.status(err.status || 500).json({
+    res.status(err.status || 400).json({
       customMessage: 'something bad happened in router',
       message: err.message,
       stack: err.stack,
