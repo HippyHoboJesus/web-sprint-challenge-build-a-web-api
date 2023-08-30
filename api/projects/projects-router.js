@@ -30,11 +30,17 @@ router.post('/', validateProject, (req, res, next) => {
 })
 
 router.put('/:id', checkProjectId, validateProject, (req, res, next) => {
+    if (req.body.completed === undefined) {
+        res.status(400).json({
+            message: 'missing required field'
+        })
+    } else {
     Projects.update(req.params.id, { name: req.name, description: req.description, completed: req.body.completed })
         .then(updatedProject => {
             res.status(200).json(updatedProject)
         })
         .catch(next)
+    }
 })
 
 router.delete('/:id', checkProjectId, async (req, res, next) => {
